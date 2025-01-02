@@ -1,0 +1,34 @@
+import { createToken, verifyToken } from "../utils/jwt.util";
+import { ApiResponse, JwtPayload, StatusCode } from "../types/api-response.type";
+import { LoginData } from "../types/login.type";
+import logger from "../utils/logger.util";
+
+const tokenService = (refreshToken: string): ApiResponse<null | LoginData> => {
+  const isVerifiedToken = verifyToken(refreshToken, "refresh") as JwtPayload;
+  if (!isVerifiedToken) {
+    logger.error("REFRESH TOKEN IS INVALID OR EXPIRED! CAN'T CREATE NEW ACCESS TOKEN!");
+    return {
+      success: false,
+      status: StatusCode.UNAUTHORIZED,
+      message: "Refresh token is invalid or expired! Please login again!.",
+      data: null
+    };
+  }
+
+  const { id, fullName, gender, avatarUrl } = isVerifiedToken;
+  const payload: JwtPayload = { id, fullName, gender, avatarUrl };
+  const newAccessToken = createToken(payload, "access");
+  logger.info("NEW ACCESS TOKEN CREATED!");
+
+  return {
+    success: true,
+    status: StatusCode.OK,
+    message: "New Access Token Created!",
+    data: {
+      refreshToken: refreshToken,
+      accessToken: newAccessToken
+    }
+  };
+};
+
+export default tokenService;

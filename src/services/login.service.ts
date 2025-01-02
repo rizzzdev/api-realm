@@ -2,7 +2,7 @@ import { PrismaClient } from ".prisma/client";
 import { LoginData, LoginRequest } from "../types/login.type";
 import { ApiResponse, JwtPayload, StatusCode } from "../types/api-response.type";
 import { verifyPassWord } from "../utils/hash.util";
-import { createRefreshToken, createAccessToken } from "../utils/jwt.util";
+import { createToken } from "../utils/jwt.util";
 import loginValidation from "../validations/login.validation";
 import logger from "../utils/logger.util";
 
@@ -50,8 +50,8 @@ const loginService = async (loginRequest: LoginRequest): Promise<ApiResponse<nul
     avatarUrl: student.avatar_url
   };
 
-  const refreshToken = createRefreshToken(payload);
-  const accessToken = createAccessToken(payload);
+  const refreshToken = createToken(payload, "refresh");
+  const accessToken = createToken(payload, "access");
   await prisma.tokens.create({ data: { student_id: student.id, refresh_token: refreshToken } });
   logger.info(`LOGIN SUCCESS: ${studentId}`);
 
