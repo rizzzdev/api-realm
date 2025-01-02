@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Students {
+  id         String      @id @unique
+  pass_word  String
+  full_name  String
+  gender     Gender
+  avatar_url String?
+  tokens     Tokens[]
+  test_marks TestMarks[]
+}
+
+model Tokens {
+  id            String   @id @default(uuid())
+  student       Students @relation(fields: [student_id], references: [id])
+  student_id    String
+  logged_at     DateTime @default(now())
+  refresh_token String
+}
+
+model LearningMaterials {
+  id           String @id @default(uuid())
+  title        String
+  description  String
+  image_url    String
+  material_url String
+}
+
+model Tests {
+  id             String          @id @default(uuid())
+  test_questions TestQuestions[]
+  test_marks     TestMarks[]
+}
+
+model TestQuestions {
+  id             String @id @default(uuid())
+  test           Tests  @relation(fields: [test_id], references: [id])
+  test_id        String
+  question       String
+  option_a       String
+  option_b       String
+  option_c       String
+  option_d       String
+  option_e       String
+  correct_option String
+}
+
+model TestMarks {
+  id         String   @id @default(uuid())
+  student    Students @relation(fields: [student_id], references: [id])
+  student_id String
+  test       Tests    @relation(fields: [test_id], references: [id])
+  test_id    String
+  mark       Int
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}

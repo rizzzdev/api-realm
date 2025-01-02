@@ -1,12 +1,19 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from "express";
+import routes from "./routes";
+import ENV from "./configs/env.config";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import logger from "./utils/logger.util";
 
 const app: Application = express();
-const port: number = 3201;
+const port: string = ENV.PORT ?? "3000";
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('hello');
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors());
+routes(app);
 
 app.listen(port, () => {
-  console.log(`Server running in port ${port}`);
+  logger.info(`Server running in port ${port}`);
 });
