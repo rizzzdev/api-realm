@@ -4,7 +4,7 @@ import { LoginData } from "../types/login.type";
 import logger from "../utils/logger.util";
 
 const tokenService = (refreshToken: string): ApiResponse<null | LoginData> => {
-  const isVerifiedToken = verifyToken(refreshToken, "refresh") as JwtPayload;
+  const isVerifiedToken = verifyToken(refreshToken, "refresh");
   if (!isVerifiedToken) {
     logger.error("REFRESH TOKEN IS INVALID OR EXPIRED! CAN'T CREATE NEW ACCESS TOKEN!");
     return {
@@ -15,8 +15,7 @@ const tokenService = (refreshToken: string): ApiResponse<null | LoginData> => {
     };
   }
 
-  const { id, fullName, gender, avatarUrl } = isVerifiedToken;
-  const payload: JwtPayload = { id, fullName, gender, avatarUrl };
+  const payload: JwtPayload = isVerifiedToken;
   const newAccessToken = createToken(payload, "access");
   logger.info("NEW ACCESS TOKEN CREATED!");
 

@@ -3,5 +3,4 @@ export interface RegisterRequest {
   passWord: string;
   fullName: string;
   gender: string;
-  avatarUrl: string;
 }

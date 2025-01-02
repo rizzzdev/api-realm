@@ -4,6 +4,7 @@ import { ApiResponse, StatusCode } from "../types/api-response.type";
 import { hashPassWord } from "../utils/hash.util";
 import registerValidation from "../validations/register.validation";
 import logger from "../utils/logger.util";
+import avatarShuffle from "../utils/avatar.util";
 
 const registerService = async (registerRequest: RegisterRequest): Promise<ApiResponse<null>> => {
   const { studentId } = registerRequest;
@@ -45,7 +46,7 @@ const registerService = async (registerRequest: RegisterRequest): Promise<ApiRes
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" "),
-      avatar_url: registerRequest.avatarUrl
+      avatar_url: avatarShuffle(registerRequest.gender.toLowerCase() === "male" ? "MALE" : "FEMALE")
     }
   });
   logger.info(`STUDENT REGISTERED: ${studentId}`);
