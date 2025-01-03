@@ -13,22 +13,22 @@ export const createToken = (payload: JwtPayload, type: "access" | "refresh"): st
 export const verifyToken = (token: string, type: "access" | "refresh") => {
   if (type === "access") {
     try {
-      const { id, fullName, gender, avatarUrl } = jwt.verify(
+      const { userId, fullName, gender, avatarUrl } = jwt.verify(
         token ?? "",
         ENV.ACCESS_TOKEN_SECRET_KEY ?? ""
       ) as JwtPayload;
-      const payload: JwtPayload = { id, fullName, gender, avatarUrl };
+      const payload: JwtPayload = { userId, fullName, gender, avatarUrl };
       return payload;
     } catch {
       return false;
     }
   } else {
     try {
-      const { id, fullName, gender, avatarUrl } = jwt.verify(
+      const { userId, fullName, gender, avatarUrl } = jwt.verify(
         token ?? "",
         ENV.REFRESH_TOKEN_SECRET_KEY ?? ""
       ) as JwtPayload;
-      const payload: JwtPayload = { id, fullName, gender, avatarUrl };
+      const payload: JwtPayload = { userId, fullName, gender, avatarUrl };
       return payload;
     } catch {
       return false;

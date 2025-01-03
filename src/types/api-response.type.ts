@@ -18,8 +18,8 @@ export enum StatusCode {
 }
 
 export interface JwtPayload {
-  id: string;
+  userId: string;
   fullName: string;
   gender: string;
-  avatarUrl: string | null;
+  avatarUrl: string;
 }

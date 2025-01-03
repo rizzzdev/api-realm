@@ -1,6 +1,6 @@
 export interface LoginRequest {
-  studentId: string;
-  passWord: string;
+  userId: string;
+  password: string;
 }
 
 export interface LoginData {

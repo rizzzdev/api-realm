@@ -1,6 +1,6 @@
 export interface RegisterRequest {
-  studentId: string;
-  passWord: string;
+  userId: string;
+  password: string;
   fullName: string;
   gender: string;
 }

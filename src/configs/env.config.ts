@@ -2,6 +2,7 @@ import "dotenv/config";
 
 const ENV = {
   PORT: process.env.PORT,
+  CLIENT_URL: process.env.CLIENT_URL,
   DATABASE_URL: process.env.DATABASE_URL,
   DIRECT_URL: process.env.DIRECT_URL,
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,

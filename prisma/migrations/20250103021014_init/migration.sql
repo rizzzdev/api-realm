@@ -1,10 +1,12 @@
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE');
+
 -- CreateTable
 CREATE TABLE "Students" (
     "id" TEXT NOT NULL,
-    "user_name" TEXT NOT NULL,
     "pass_word" TEXT NOT NULL,
     "full_name" TEXT NOT NULL,
-    "gender" TEXT NOT NULL,
+    "gender" "Gender" NOT NULL,
     "avatar_url" TEXT NOT NULL,
 
     CONSTRAINT "Students_pkey" PRIMARY KEY ("id")
@@ -43,6 +45,7 @@ CREATE TABLE "TestQuestions" (
     "id" TEXT NOT NULL,
     "test_id" TEXT NOT NULL,
     "question" TEXT NOT NULL,
+    "image_url" TEXT,
     "option_a" TEXT NOT NULL,
     "option_b" TEXT NOT NULL,
     "option_c" TEXT NOT NULL,
@@ -58,9 +61,16 @@ CREATE TABLE "TestMarks" (
     "id" TEXT NOT NULL,
     "student_id" TEXT NOT NULL,
     "test_id" TEXT NOT NULL,
+    "mark" INTEGER NOT NULL,
 
     CONSTRAINT "TestMarks_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Students_id_key" ON "Students"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Tokens_refresh_token_key" ON "Tokens"("refresh_token");
 
 -- AddForeignKey
 ALTER TABLE "Tokens" ADD CONSTRAINT "Tokens_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

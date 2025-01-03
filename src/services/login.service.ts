@@ -1,13 +1,13 @@
 import { PrismaClient } from ".prisma/client";
 import { LoginData, LoginRequest } from "../types/login.type";
 import { ApiResponse, JwtPayload, StatusCode } from "../types/api-response.type";
-import { verifyPassWord } from "../utils/hash.util";
+import { verifyPassword } from "../utils/hash.util";
 import { createToken } from "../utils/jwt.util";
 import loginValidation from "../validations/login.validation";
 import logger from "../utils/logger.util";
 
 const loginService = async (loginRequest: LoginRequest): Promise<ApiResponse<null | LoginData>> => {
-  const { studentId, passWord } = loginRequest;
+  const { userId, password } = loginRequest;
   const prisma = new PrismaClient();
 
   const { error } = loginValidation(loginRequest);
@@ -21,39 +21,39 @@ const loginService = async (loginRequest: LoginRequest): Promise<ApiResponse<nul
     };
   }
 
-  const student = await prisma.students.findFirst({ where: { id: studentId } });
-  if (!student) {
-    logger.error(`STUDENT NOT FOUND: ${studentId}`);
+  const user = await prisma.users.findFirst({ where: { id: userId } });
+  if (!user) {
+    logger.error(`USER NOT FOUND: ${userId}`);
     return {
       success: false,
-      status: StatusCode.BAD_REQUEST,
-      message: "Student ID or Password is incorrect!",
+      status: StatusCode.NOT_FOUND,
+      message: "User ID or Password is incorrect!",
       data: null
     };
   }
 
-  const verify = verifyPassWord(passWord, student.pass_word);
+  const verify = verifyPassword(password, user.pass_word);
   if (!verify) {
-    logger.error(`INCORRECT PASSWORD: ${studentId}`);
+    logger.error(`INCORRECT PASSWORD: ${userId}`);
     return {
       success: false,
-      status: StatusCode.BAD_REQUEST,
-      message: "Student ID or Password is incorrect!",
+      status: StatusCode.NOT_FOUND,
+      message: "User ID or Password is incorrect!",
       data: null
     };
   }
 
   const payload: JwtPayload = {
-    id: student.id,
-    fullName: student.full_name,
-    gender: student.gender,
-    avatarUrl: student.avatar_url
+    userId: user.id,
+    fullName: user.full_name,
+    gender: user.gender,
+    avatarUrl: user.avatar_url
   };
 
   const refreshToken = createToken(payload, "refresh");
   const accessToken = createToken(payload, "access");
-  await prisma.tokens.create({ data: { student_id: student.id, refresh_token: refreshToken } });
-  logger.info(`LOGIN SUCCESS: ${studentId}`);
+  await prisma.tokens.create({ data: { user_id: user.id, refresh_token: refreshToken } });
+  logger.info(`LOGIN SUCCESS: ${userId}`);
 
   return {
     success: true,

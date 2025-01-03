@@ -8,10 +8,16 @@ import logger from "./utils/logger.util";
 const app: Application = express();
 const port: string = ENV.PORT ?? "3000";
 
+app.set("trust proxy", true);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: ENV.CLIENT_URL
+  })
+);
 routes(app);
 
 app.listen(port, () => {

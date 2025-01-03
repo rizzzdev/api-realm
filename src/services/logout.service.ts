@@ -7,11 +7,11 @@ const logoutService = async (refreshToken: string): Promise<ApiResponse<null>> =
   const prisma = new PrismaClient();
   const isVerifiedToken = verifyToken(refreshToken, "refresh") as JwtPayload;
   if (!isVerifiedToken) {
-    logger.error("REFRESH TOKEN IS INVALID OR EXPIRED, CAN'T LOGOUT!");
+    logger.error("REFRESH TOKEN IS INVALID, EXPIRED, OR YOU'RE NOT LOGGED IN!");
     return {
       success: false,
       status: StatusCode.UNAUTHORIZED,
-      message: "Refresh token is invalid or expired! Can't logout!",
+      message: "Refresh token is invalid, expired, or you're not logged in!",
       data: null
     };
   }

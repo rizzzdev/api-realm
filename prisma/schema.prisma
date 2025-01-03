@@ -14,61 +14,78 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Students {
-  id         String      @id @unique
-  pass_word  String
-  full_name  String
-  gender     Gender
-  avatar_url String?
-  tokens     Tokens[]
-  test_marks TestMarks[]
+model Users {
+  id            String      @id @unique
+  pass_word     String
+  full_name     String
+  gender        Gender
+  avatar_url    String
+  registered_at DateTime    @default(now())
+  deleted_at    DateTime?
+  role          Role        @default(STUDENT)
+  tokens        Tokens[]
+  test_marks    TestMarks[]
 }
 
 model Tokens {
-  id            String   @id @default(uuid())
-  student       Students @relation(fields: [student_id], references: [id])
-  student_id    String
-  logged_at     DateTime @default(now())
-  refresh_token String   @unique
+  id            String    @id @default(uuid())
+  user          Users     @relation(fields: [user_id], references: [id])
+  user_id       String
+  logged_in_at  DateTime  @default(now())
+  logged_out_at DateTime?
+  refresh_token String?   @unique
 }
 
 model LearningMaterials {
-  id           String @id @default(uuid())
+  id           String    @id @default(uuid())
   title        String
   description  String
   image_url    String
   material_url String
+  created_at   DateTime  @default(now())
+  deleted_at   DateTime?
 }
 
 model Tests {
   id             String          @id @default(uuid())
   test_questions TestQuestions[]
   test_marks     TestMarks[]
+  created_at     DateTime        @default(now())
+  deleted_at     DateTime?
 }
 
 model TestQuestions {
-  id             String @id @default(uuid())
-  test           Tests  @relation(fields: [test_id], references: [id])
+  id             String    @id @default(uuid())
+  test           Tests     @relation(fields: [test_id], references: [id])
   test_id        String
   question       String
+  image_url      String?
   option_a       String
   option_b       String
   option_c       String
   option_d       String
   option_e       String
   correct_option String
+  created_at     DateTime  @default(now())
+  deleted_at     DateTime?
 }
 
 model TestMarks {
-  id         String   @id @default(uuid())
-  student    Students @relation(fields: [student_id], references: [id])
-  student_id String
-  test       Tests    @relation(fields: [test_id], references: [id])
-  test_id    String
-  mark       Int
+  id        String   @id @default(uuid())
+  user      Users    @relation(fields: [user_id], references: [id])
+  user_id   String
+  test      Tests    @relation(fields: [test_id], references: [id])
+  test_id   String
+  mark      Int
+  marked_at DateTime @default(now())
 }
 
 enum Gender {
   MALE
   FEMALE
+}
+
+enum Role {
+  STUDENT
+  ADMIN
 }

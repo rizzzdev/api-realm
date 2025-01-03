@@ -7,7 +7,7 @@ const loginController = async (request: Request, response: Response) => {
   const loginResponse: ApiResponse<null | LoginData> = await loginService(request.body);
   if (loginResponse.data) {
     response.cookie("refresh-token", loginResponse.data.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-    response.cookie("access-token", loginResponse.data.accessToken, { httpOnly: true, maxAge: 10 * 60 * 1000 });
+    response.cookie("access-token", loginResponse.data.accessToken, { httpOnly: true, maxAge: 60 * 1000 });
   }
   response.status(loginResponse.status).send(loginResponse);
 };

@@ -1,0 +1,21 @@
+-- AlterTable
+ALTER TABLE "LearningMaterials" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "deleted_at" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "TestMarks" ADD COLUMN     "marked_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "TestQuestions" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "deleted_at" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "Tests" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "deleted_at" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "Tokens" ALTER COLUMN "refresh_token" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Users" ADD COLUMN     "deleted_at" TIMESTAMP(3),
+ADD COLUMN     "registered_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
