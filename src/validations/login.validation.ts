@@ -1,4 +1,4 @@
-import Joi from "joi/lib";
+import Joi from "joi";
 import { LoginRequest } from "../types/login.type";
 
 const loginValidation = (registerRequest: LoginRequest) => {

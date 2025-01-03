@@ -70,14 +70,14 @@ export const getUserById = async (id: string) => {
     return {
       success: false,
       status: StatusCode.NOT_FOUND,
-      message: `User with User ID ${id} not found!`,
+      message: `User not found!`,
       data: null
     };
   } else {
     return {
       success: true,
       status: StatusCode.OK,
-      message: `Get User with User ID ${id} successfully!`,
+      message: `Get User successfully!`,
       data: user
     };
   }

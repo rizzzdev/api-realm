@@ -1,4 +1,4 @@
-import Joi from "joi/lib";
+import Joi from "joi";
 import { User } from "../types/user.type";
 
 const userValidation = (user: User) => {

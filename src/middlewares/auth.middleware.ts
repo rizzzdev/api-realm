@@ -1,16 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { StatusCode } from "../types/api-response.type";
+import { ApiResponse, StatusCode } from "../types/api-response.type";
 import logger from "../utils/logger.util";
 import { verifyToken } from "../utils/jwt.util";
-import { PrismaClient } from ".prisma/client";
+import { findRefreshTokenByRefreshToken } from "../repos/token.repo";
 
 const authMiddleware = async (request: Request, response: Response, next: NextFunction) => {
-  const prisma = new PrismaClient();
-
   const refreshToken = request.cookies["refresh-token"];
   if (!refreshToken) {
     logger.error("REFRESH TOKEN NOT FOUND IN COOKIES!");
-    const result = {
+    const result: ApiResponse<null> = {
       success: false,
       status: StatusCode.UNAUTHORIZED,
       message: "Refresh token is invalid, expired, or you're not logged in! Please login again!.",
@@ -23,7 +21,7 @@ const authMiddleware = async (request: Request, response: Response, next: NextFu
   const isVerifiedToken = verifyToken(refreshToken, "refresh");
   if (!isVerifiedToken) {
     logger.error("REFRESH TOKEN IS INVALID, EXPIRED, OR YOU'RE NOT LOGGED IN! CAN'T CREATE NEW ACCESS TOKEN!");
-    const result = {
+    const result: ApiResponse<null> = {
       success: false,
       status: StatusCode.UNAUTHORIZED,
       message: "Refresh token is invalid, expired, or you're not logged in! Please login again!.",
@@ -33,14 +31,10 @@ const authMiddleware = async (request: Request, response: Response, next: NextFu
     return;
   }
 
-  const refreshTokenDB = await prisma.tokens.findFirst({
-    where: {
-      refresh_token: refreshToken
-    }
-  });
+  const refreshTokenDB = await findRefreshTokenByRefreshToken(refreshToken);
   if (!refreshTokenDB) {
     logger.error("REFRESH TOKEN NOT FOUND IN DATABASE!");
-    const result = {
+    const result: ApiResponse<null> = {
       success: false,
       status: StatusCode.UNAUTHORIZED,
       message: "Refresh token is invalid, expired, or you're not logged in! Please login again!.",

@@ -4,13 +4,15 @@ import loginRouter from "./login.route";
 import registerRouter from "./register.route";
 import tokenRouter from "./token.route";
 import logoutRouter from "./logout.route";
+import userRouter from "./users.route";
 
 const _routes: [string, Router][] = [
   ["/", introRouter],
   ["/login", loginRouter],
   ["/register", registerRouter],
   ["/token", tokenRouter],
-  ["/logout", logoutRouter]
+  ["/logout", logoutRouter],
+  ["/users", userRouter]
 ];
 
 const routes = (app: Application) => {

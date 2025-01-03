@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 
 const introRouter: Router = Router();
 
-introRouter.get("", (request: Request, response: Response) => {
+introRouter.get("/", (request: Request, response: Response) => {
   const apiReponse = {
     title: "API Realm",
     description: "A REST API for the Realm Application",

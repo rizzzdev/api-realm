@@ -4,6 +4,6 @@ import authMiddleware from "../middlewares/auth.middleware";
 
 const logoutRouter: Router = Router();
 
-logoutRouter.patch("", authMiddleware, logoutController);
+logoutRouter.patch("/", authMiddleware, logoutController);
 
 export default logoutRouter;

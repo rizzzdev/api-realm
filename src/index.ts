@@ -19,6 +19,9 @@ app.use(
   })
 );
 routes(app);
+app.use("/v1/coba", (req, res) => {
+  res.send(req.headers.authorization);
+});
 
 app.listen(port, () => {
   logger.info(`Server running in port ${port}`);
