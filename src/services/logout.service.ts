@@ -1,29 +1,25 @@
-import { verifyToken } from "../utils/jwt.util";
-import { ApiResponse, JwtPayload, StatusCode } from "../types/api-response.type";
-import logger from "../utils/logger.util";
-import { PrismaClient } from ".prisma/client";
+import { ApiResponse, StatusCode } from "../types/api-response.type";
+import { findRefreshTokenByRefreshToken, updateRefreshTokenById } from "../repos/token.repo";
+import { datetime } from "../utils/datetime.util";
 
 const logoutService = async (refreshToken: string): Promise<ApiResponse<null>> => {
-  const prisma = new PrismaClient();
-  const isVerifiedToken = verifyToken(refreshToken, "refresh") as JwtPayload;
-  if (!isVerifiedToken) {
-    logger.error("REFRESH TOKEN IS INVALID, EXPIRED, OR YOU'RE NOT LOGGED IN!");
+  const refreshTokenDB = await findRefreshTokenByRefreshToken(refreshToken);
+
+  if (!refreshTokenDB) {
     return {
       success: false,
-      status: StatusCode.UNAUTHORIZED,
-      message: "Refresh token is invalid, expired, or you're not logged in!",
+      status: StatusCode.NOT_FOUND,
+      message: "Refresh token not found!",
       data: null
     };
   }
 
-  await prisma.tokens.delete({
-    where: {
-      refresh_token: refreshToken
-    }
+  await updateRefreshTokenById(refreshTokenDB.id, {
+    userId: refreshTokenDB.user_id,
+    refreshToken: "",
+    loggedInAt: refreshTokenDB.logged_in_at,
+    loggedOutAt: datetime()
   });
-
-  logger.info("LOGOUT SUCCESS!");
-
   return {
     success: true,
     status: StatusCode.OK,

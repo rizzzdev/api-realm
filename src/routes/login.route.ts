@@ -3,6 +3,6 @@ import loginCountroler from "../controllers/login.controller";
 
 const loginRouter: Router = Router();
 
-loginRouter.post("/v1/login", loginCountroler);
+loginRouter.post("", loginCountroler);
 
 export default loginRouter;

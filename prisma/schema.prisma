@@ -20,7 +20,7 @@ model Users {
   full_name     String
   gender        Gender
   avatar_url    String
-  registered_at DateTime    @default(now())
+  registered_at DateTime
   deleted_at    DateTime?
   role          Role        @default(STUDENT)
   tokens        Tokens[]
@@ -31,9 +31,9 @@ model Tokens {
   id            String    @id @default(uuid())
   user          Users     @relation(fields: [user_id], references: [id])
   user_id       String
-  logged_in_at  DateTime  @default(now())
+  logged_in_at  DateTime
   logged_out_at DateTime?
-  refresh_token String?   @unique
+  refresh_token String?
 }
 
 model LearningMaterials {
@@ -42,7 +42,7 @@ model LearningMaterials {
   description  String
   image_url    String
   material_url String
-  created_at   DateTime  @default(now())
+  created_at   DateTime
   deleted_at   DateTime?
 }
 
@@ -50,7 +50,7 @@ model Tests {
   id             String          @id @default(uuid())
   test_questions TestQuestions[]
   test_marks     TestMarks[]
-  created_at     DateTime        @default(now())
+  created_at     DateTime
   deleted_at     DateTime?
 }
 
@@ -66,7 +66,7 @@ model TestQuestions {
   option_d       String
   option_e       String
   correct_option String
-  created_at     DateTime  @default(now())
+  created_at     DateTime
   deleted_at     DateTime?
 }
 
@@ -77,7 +77,7 @@ model TestMarks {
   test      Tests    @relation(fields: [test_id], references: [id])
   test_id   String
   mark      Int
-  marked_at DateTime @default(now())
+  marked_at DateTime
 }
 
 enum Gender {

@@ -3,6 +3,6 @@ import registerController from "../controllers/register.controller";
 
 const registerRouter: Router = Router();
 
-registerRouter.post("/v1/register", registerController);
+registerRouter.post("", registerController);
 
 export default registerRouter;

@@ -5,11 +5,19 @@ import registerRouter from "./register.route";
 import tokenRouter from "./token.route";
 import logoutRouter from "./logout.route";
 
-const _routes: Router[] = [introRouter, loginRouter, registerRouter, tokenRouter, logoutRouter];
+const _routes: [string, Router][] = [
+  ["/", introRouter],
+  ["/login", loginRouter],
+  ["/register", registerRouter],
+  ["/token", tokenRouter],
+  ["/logout", logoutRouter]
+];
 
 const routes = (app: Application) => {
-  _routes.forEach((route) => {
-    app.use(route);
+  app.use("/", introRouter);
+  _routes.forEach((_route) => {
+    const [endpoint, router] = _route;
+    app.use(`/v1${endpoint}`, router);
   });
 };
 
