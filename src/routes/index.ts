@@ -4,7 +4,7 @@ import loginRouter from "./login.route";
 import registerRouter from "./register.route";
 import tokenRouter from "./token.route";
 import logoutRouter from "./logout.route";
-import userRouter from "./users.route";
+import userRouter from "./user.route";
 
 const _routes: [string, Router][] = [
   ["/", introRouter],

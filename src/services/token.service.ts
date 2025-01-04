@@ -7,7 +7,6 @@ const tokenService = (refreshToken: string): ApiResponse<null | LoginData> => {
   const isVerifiedToken = verifyToken(refreshToken, "refresh") as JwtPayload;
   const payload: JwtPayload = isVerifiedToken;
   const newAccessToken = createToken(payload, "access");
-  logger.info(`NEW ACCESS TOKEN CREATED!: ${payload.userId}`);
   return {
     success: true,
     status: StatusCode.OK,

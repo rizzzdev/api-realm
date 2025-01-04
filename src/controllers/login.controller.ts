@@ -14,7 +14,6 @@ const loginController = async (request: Request, response: Response) => {
   logger.info(`${loginResponse.message.toUpperCase()}: ${request.body.userId}`);
   response
     .cookie("refresh-token", loginResponse.data!.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
-    .cookie("access-token", loginResponse.data!.accessToken, { httpOnly: true, maxAge: 60 * 1000 })
     .status(loginResponse.status)
     .send(loginResponse);
 };

@@ -1,51 +1,38 @@
 import { Request, Response } from "express";
 import { getAllUsers, getUserById } from "../services/user.service";
 import logger from "../utils/logger.util";
-import { ApiResponse, JwtPayload, StatusCode } from "../types/api-response.type";
+import { JwtPayload } from "../types/api-response.type";
 import { verifyToken } from "../utils/jwt.util";
 
-const usersController = async (request: Request, response: Response) => {
-  const id = request.params.id;
+export const getUsersController = async (request: Request, response: Response) => {
   const accessToken = request.headers.authorization!.split(" ")[1];
-  const { userId } = verifyToken(accessToken, "access") as JwtPayload;
-  const user = await getUserById(id);
+  const payload = verifyToken(accessToken, "access") as JwtPayload;
   const users = await getAllUsers();
 
-  if (!accessToken) {
-    logger.error("NEED ACCESS TOKEN TO GET USER!");
-    const result: ApiResponse<null> = {
-      success: false,
-      status: StatusCode.UNAUTHORIZED,
-      message: "Need access token to get user!",
-      data: null
-    };
-    response.status(result.status).send(result);
-    return;
-  }
-
-  if (id && !user.success) {
-    logger.error(`${user.message.toUpperCase()}: ${userId}`);
-    response.status(user.status).send(user);
-    return;
-  }
-
-  if (id && user.success) {
-    logger.info(`GET USER BY ID ${id}: ${userId}`);
-    response.status(user.status).send(user);
-    return;
-  }
-
-  if (!id && !users.success) {
-    logger.error(`${users.message.toUpperCase()}: ${userId}`);
+  if (!users.success) {
+    logger.error(`${users.message.toUpperCase()}: ${payload.userId}`);
     response.status(users.status).send(users);
     return;
   }
 
-  if (!id && users.success) {
-    logger.info(`GET ALL USERS: ${userId}`);
-    response.status(users.status).send(users);
-    return;
-  }
+  logger.info(`GET ALL USERS: ${payload.userId}`);
+  response.status(users.status).send(users);
+  return;
 };
 
-export default usersController;
+export const getUserByIdController = async (request: Request, response: Response) => {
+  const accessToken = request.headers.authorization!.split(" ")[1];
+  const payload = verifyToken(accessToken, "access") as JwtPayload;
+  const id = request.params.id;
+  const user = await getUserById(id);
+
+  if (!user.success) {
+    logger.error(`${user.message.toUpperCase()}: ${payload.userId}`);
+    response.status(user.status).send(user);
+    return;
+  }
+
+  logger.info(`GET USER BY ID ${id}: ${payload.userId}`);
+  response.status(user.status).send(user);
+  return;
+};

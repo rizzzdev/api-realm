@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { User } from "../types/user.type";
 
-const userValidation = (user: User) => {
+const userValidation = (userData: User) => {
   const schema = Joi.object({
     userId: Joi.string().min(8).max(20).required(),
     password: Joi.string().min(8).max(20).required(),
@@ -12,7 +12,7 @@ const userValidation = (user: User) => {
     deletedAt: Joi.date().optional(),
     role: Joi.string().valid("ADMIN", "STUDENT").required()
   });
-  return schema.validate(user);
+  return schema.validate(userData);
 };
 
 export default userValidation;
