@@ -12,7 +12,6 @@ const logoutController = async (request: Request, response: Response) => {
   logger.info(`${logoutResponse.message.toUpperCase()}: ${payload.userId}`);
   response
     .cookie("refresh-token", "", { httpOnly: true, maxAge: 0 })
-    .cookie("access-token", "", { httpOnly: true, maxAge: 0 })
     .status(logoutResponse.status)
     .send(logoutResponse);
 };

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import logger from "../utils/logger.util";
 import { JwtPayload } from "../types/api-response.type";
 import { verifyToken } from "../utils/jwt.util";
-import { GetAllMaterials, postMaterial } from "../services/material.service";
+import { GetAllMaterials, getMaterialById, postMaterial } from "../services/material.service";
 import { Material } from "../types/material.type";
 
 export const getMaterialsController = async (request: Request, response: Response) => {
@@ -25,7 +25,7 @@ export const getMaterialByIdController = async (request: Request, response: Resp
   const accessToken = request.headers.authorization!.split(" ")[1];
   const payload = verifyToken(accessToken, "access") as JwtPayload;
   const id = request.params.id;
-  const material = await GetAllMaterials();
+  const material = await getMaterialById(id);
 
   if (!material.success) {
     logger.error(`${material.message.toUpperCase()}: ${payload.userId}`);

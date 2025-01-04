@@ -5,6 +5,7 @@ import registerRouter from "./register.route";
 import tokenRouter from "./token.route";
 import logoutRouter from "./logout.route";
 import userRouter from "./user.route";
+import materialRouter from "./material.route";
 
 const _routes: [string, Router][] = [
   ["/", introRouter],
@@ -12,7 +13,8 @@ const _routes: [string, Router][] = [
   ["/register", registerRouter],
   ["/token", tokenRouter],
   ["/logout", logoutRouter],
-  ["/users", userRouter]
+  ["/users", userRouter],
+  ["/materials", materialRouter]
 ];
 
 const routes = (app: Application) => {

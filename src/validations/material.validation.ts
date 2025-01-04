@@ -7,7 +7,7 @@ const materialValidation = (materialData: Material) => {
     description: Joi.string().min(1).max(100).required(),
     imageUrl: Joi.string().required(),
     materialUrl: Joi.string().required(),
-    createdAt: Joi.date().required(),
+    createdAt: Joi.date().optional(),
     deletedAt: Joi.date().optional()
   });
   return schema.validate(materialData);

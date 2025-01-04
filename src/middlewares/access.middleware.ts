@@ -5,9 +5,9 @@ import { verifyToken } from "../utils/jwt.util";
 
 const accessMiddleware = (request: Request, response: Response, next: NextFunction) => {
   const refreshToken = request.cookies["refresh-token"];
-  const accessToken = request.headers.authorization!.split(" ")[1];
+  const accessToken = request.headers?.authorization?.split(" ")[1];
   const refreshTokenPayload = verifyToken(refreshToken, "refresh") as JwtPayload;
-  const accessTokenPayload = verifyToken(accessToken, "access") as JwtPayload;
+  const accessTokenPayload = verifyToken(accessToken!, "access") as JwtPayload;
 
   if (!accessToken) {
     logger.error("NEED ACCESS TOKEN TO ACCESS THIS ROUTE!");
