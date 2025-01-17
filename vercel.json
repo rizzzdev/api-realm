@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "cors": {
-    "allowOrigins": ["https://client-realm.vercel.app"],
-    "allowMethods": ["GET", "POST", "PATCH"],
-    "allowHeaders": ["Content-Type", "Authorization"]
-  },
   "builds": [
     {
       "src": "src/index.ts",
