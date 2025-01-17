@@ -18,8 +18,8 @@ app.use(
   cors({
     credentials: true,
     origin: [ENV!.CLIENT_URL!, "http://localhost:3000"],
-    methods: ["GET", "POST", "PATCH"]
-    // allowedHeaders: ["Content-Type", "Authorization"]
+    methods: ["GET", "POST", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"]
     // preflightContinue: true
   })
 );
