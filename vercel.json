@@ -15,7 +15,10 @@
     {
       "src": "/(.*)",
       "dest": "src/index.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH"]
+      "methods": ["GET", "POST", "PATCH"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://client-realm.vercel.app"
+      }
     }
   ]
 }
