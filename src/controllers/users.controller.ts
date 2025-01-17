@@ -70,7 +70,8 @@ export const signInUserController = async (request: Request, response: Response)
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       secure: true,
-      domain: ".vercel.app"
+      path: "/",
+      sameSite: "none"
     })
     .status(signInUserResponse.status)
     .send(signInUserResponse);
@@ -89,7 +90,13 @@ export const signOutUserController = async (request: Request, response: Response
 
   logger.info(`${signOutUserResponse.message.toUpperCase()}: REQUESTED BY ${payload.username.toUpperCase()}`);
   response
-    .cookie("refresh-token", "", { httpOnly: true, maxAge: 0, secure: true, domain: ".vercel.app" })
+    .cookie("refresh-token", "", {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+      path: "/",
+      sameSite: "none"
+    })
     .status(signOutUserResponse.status)
     .send(signOutUserResponse);
 };
