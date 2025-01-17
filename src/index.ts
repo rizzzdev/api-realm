@@ -18,14 +18,12 @@ app.use(
   cors({
     credentials: true,
     origin: [ENV!.CLIENT_URL!, "http://localhost:3000"],
-    methods: ["GET", "POST", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    methods: ["GET", "POST", "PATCH"]
+    // allowedHeaders: ["Content-Type", "Authorization"]
+    // preflightContinue: true
   })
 );
 routes(app);
-app.use("/v1/coba", (req, res) => {
-  res.send(req.headers.authorization);
-});
 
 app.listen(port, () => {
   logger.info(`Server running in port ${port}`);
