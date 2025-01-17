@@ -3,6 +3,7 @@ import { getUsers, getUserById, getUserMarksById, postUser, signInUser, signOutU
 import logger from "../utils/logger.util";
 import { verifyToken } from "../utils/jwt.util";
 import { PostUserRequest, SignInUserRequest, UserPayload } from "../types/user.type";
+import ENV from "../configs/env.config";
 
 export const getUsersController = async (request: Request, response: Response) => {
   const accessToken = request.headers.authorization!.split(" ")[1];
@@ -68,7 +69,8 @@ export const signInUserController = async (request: Request, response: Response)
     .cookie("refresh-token", signInUserResponse.data!.refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      secure: true
+      secure: true,
+      domain: ENV.CLIENT_URL
     })
     .status(signInUserResponse.status)
     .send(signInUserResponse);
@@ -87,7 +89,7 @@ export const signOutUserController = async (request: Request, response: Response
 
   logger.info(`${signOutUserResponse.message.toUpperCase()}: REQUESTED BY ${payload.username.toUpperCase()}`);
   response
-    .cookie("refresh-token", "", { httpOnly: true, maxAge: 0, secure: true })
+    .cookie("refresh-token", "", { httpOnly: true, maxAge: 0, secure: true, domain: ENV.CLIENT_URL })
     .status(signOutUserResponse.status)
     .send(signOutUserResponse);
 };
