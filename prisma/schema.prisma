@@ -9,75 +9,109 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+//   directUrl = env("DIRECT_URL")
+// }
+
 model Users {
-  id            String      @id @unique
-  pass_word     String
-  full_name     String
-  gender        Gender
-  avatar_url    String
-  registered_at DateTime
-  deleted_at    DateTime?
-  role          Role        @default(STUDENT)
-  tokens        Tokens[]
-  test_marks    TestMarks[]
+  id         String       @id @default(uuid())
+  username   String       @unique
+  password   String
+  fullName   String
+  gender     Gender
+  avatarUrl  String
+  signedUpAt DateTime
+  deletedAt  DateTime?
+  role       Role         @default(STUDENT)
+  tokens     Tokens[]
+  marks      Marks[]
+  activities Activities[]
+}
+
+model Materials {
+  id             String       @id @default(uuid())
+  title          String
+  description    String
+  imageUrl       String
+  materialString String       @db.LongText
+  quiz           Quizzes?
+  activities     Activities[]
+  createdAt      DateTime
+  deletedAt      DateTime?
+}
+
+model Activities {
+  id         String    @id @default(uuid())
+  material   Materials @relation(fields: [materialId], references: [id])
+  materialId String
+  user       Users     @relation(fields: [userId], references: [id])
+  userId     String
 }
 
 model Tokens {
-  id            String    @id @default(uuid())
-  user          Users     @relation(fields: [user_id], references: [id])
-  user_id       String
-  logged_in_at  DateTime
-  logged_out_at DateTime?
-  refresh_token String?
-}
-
-model LearningMaterials {
   id           String    @id @default(uuid())
-  title        String
-  description  String
-  image_url    String
-  material_url String
-  created_at   DateTime
-  deleted_at   DateTime?
+  user         Users     @relation(fields: [userId], references: [id])
+  userId       String
+  loggedInAt   DateTime
+  loggedOutAt  DateTime?
+  refreshToken String?   @db.LongText
 }
 
 model Tests {
-  id             String          @id @default(uuid())
-  test_questions TestQuestions[]
-  test_marks     TestMarks[]
-  created_at     DateTime
-  deleted_at     DateTime?
+  id        String      @id @default(uuid())
+  questions Questions[]
+  mark      Marks[]
+  createdAt DateTime
+  deletedAt DateTime?
 }
 
-model TestQuestions {
-  id             String    @id @default(uuid())
-  test           Tests     @relation(fields: [test_id], references: [id])
-  test_id        String
-  question       String
-  image_url      String?
-  option_a       String
-  option_b       String
-  option_c       String
-  option_d       String
-  option_e       String
-  correct_option String
-  created_at     DateTime
-  deleted_at     DateTime?
+model Quizzes {
+  id         String      @id @default(uuid())
+  material   Materials   @relation(fields: [materialId], references: [id])
+  materialId String      @unique @default("")
+  questions  Questions[]
+  marks      Marks[]
+  createdAt  DateTime
+  deletedAt  DateTime?
 }
 
-model TestMarks {
-  id        String   @id @default(uuid())
-  user      Users    @relation(fields: [user_id], references: [id])
-  user_id   String
-  test      Tests    @relation(fields: [test_id], references: [id])
-  test_id   String
-  mark      Int
-  marked_at DateTime
+model Questions {
+  id            String    @id @default(uuid())
+  test          Tests?    @relation(fields: [testId], references: [id])
+  testId        String?
+  quiz          Quizzes?  @relation(fields: [quizId], references: [id])
+  quizId        String?
+  question      String
+  imageUrl      String?
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String?
+  optionE       String?
+  correctOption String
+  createdAt     DateTime
+  deletedAt     DateTime?
+}
+
+model Marks {
+  id       String   @id @default(uuid())
+  user     Users    @relation(fields: [userId], references: [id])
+  userId   String
+  test     Tests?   @relation(fields: [testId], references: [id])
+  testId   String?
+  quiz     Quizzes? @relation(fields: [quizId], references: [id])
+  quizId   String?
+  mark     Int
+  markedAt DateTime
+
+  @@unique([userId, testId])
+  @@unique([userId, quizId])
 }
 
 enum Gender {

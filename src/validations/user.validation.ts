@@ -1,18 +1,20 @@
 import Joi from "joi";
-import { User } from "../types/user.type";
+import { PostUserRequest, SignInUserRequest } from "../types/user.type";
 
-const userValidation = (userData: User) => {
+export const postUserRequestValidation = (userData: PostUserRequest) => {
   const schema = Joi.object({
-    userId: Joi.string().min(8).max(20).required(),
+    username: Joi.string().min(8).max(20).required(),
     password: Joi.string().min(8).max(20).required(),
     fullName: Joi.string().min(1).max(100).required(),
-    gender: Joi.string().valid("MALE", "FEMALE").required(),
-    avatarUrl: Joi.string().required(),
-    registeredAt: Joi.date().required(),
-    deletedAt: Joi.date().optional(),
-    role: Joi.string().valid("ADMIN", "STUDENT").required()
+    gender: Joi.string().valid("MALE", "FEMALE").required()
   });
   return schema.validate(userData);
 };
 
-export default userValidation;
+export const signInUserRequestValidation = (userData: SignInUserRequest) => {
+  const schema = Joi.object({
+    username: Joi.string().min(8).max(20).required(),
+    password: Joi.string().min(8).max(20).required()
+  });
+  return schema.validate(userData);
+};

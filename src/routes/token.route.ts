@@ -1,9 +1,8 @@
 import { Router } from "express";
-import tokenController from "../controllers/token.controller";
 import authMiddleware from "../middlewares/auth.middleware";
+import { getNewAccessTokenController } from "../controllers/token.controller";
 
-const tokenRouter: Router = Router();
+const getNewAccessTokenRouter: Router = Router();
+getNewAccessTokenRouter.get("/", authMiddleware, getNewAccessTokenController);
 
-tokenRouter.get("/", authMiddleware, tokenController);
-
-export default tokenRouter;
+export { getNewAccessTokenRouter };

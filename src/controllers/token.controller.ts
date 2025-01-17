@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
-import tokenService from "../services/token.service";
 import logger from "../utils/logger.util";
 import { verifyToken } from "..//utils/jwt.util";
-import { JwtPayload } from "../types/api-response.type";
+import { UserPayload } from "../types/user.type";
+import { getNewAccessToken } from "../services/token.service";
 
-const tokenController = (request: Request, response: Response) => {
+export const getNewAccessTokenController = async (request: Request, response: Response) => {
   const refreshToken = request.cookies["refresh-token"];
-  const payload = verifyToken(refreshToken, "refresh") as JwtPayload;
-  const tokenResponse = tokenService(refreshToken);
+  const payload = verifyToken(refreshToken, "refresh") as UserPayload;
+  const getNewAccessTokenResponse = await getNewAccessToken(refreshToken);
+  if (!getNewAccessTokenResponse.success && !payload) {
+    logger.error("REFRESH TOKEN NOT FOUND IN COOKIES!");
+    response.status(getNewAccessTokenResponse.status).send(getNewAccessTokenResponse);
+    return;
+  }
 
-  logger.info(`${tokenResponse.message.toUpperCase()}: ${payload.userId}`);
-  response.status(tokenResponse.status).send(tokenResponse);
+  logger.info(`GET NEW ACCESS TOKEN: ${payload.username}`);
+  response.status(getNewAccessTokenResponse.status).send(getNewAccessTokenResponse);
   return;
 };
-
-export default tokenController;

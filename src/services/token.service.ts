@@ -1,21 +1,56 @@
-import { createToken, verifyToken } from "../utils/jwt.util";
-import { ApiResponse, JwtPayload, StatusCode } from "../types/api-response.type";
-import { LoginData } from "../types/login.type";
-import logger from "../utils/logger.util";
+import { Token } from "../types/token.type";
+import { createToken } from "../repos/token.repo";
+import { StatusCode } from "../types/api.type";
+import { UserPayload } from "../types/user.type";
+import { signToken, verifyToken } from "../utils/jwt.util";
 
-const tokenService = (refreshToken: string): ApiResponse<null | LoginData> => {
-  const isVerifiedToken = verifyToken(refreshToken, "refresh") as JwtPayload;
-  const payload: JwtPayload = isVerifiedToken;
-  const newAccessToken = createToken(payload, "access");
-  return {
-    success: true,
-    status: StatusCode.OK,
-    message: "New Access Token Created!",
-    data: {
-      refreshToken: refreshToken,
-      accessToken: newAccessToken
-    }
-  };
+export const postToken = async (tokenData: Token) => {
+  try {
+    const token = await createToken(tokenData);
+    return {
+      success: true,
+      status: StatusCode.CREATED,
+      message: "Token created successfully!",
+      data: token
+    };
+  } catch {
+    return {
+      success: false,
+      status: StatusCode.INTERNAL_SERVER_ERROR,
+      message: "Something went wrong!",
+      data: null
+    };
+  }
 };
 
-export default tokenService;
+export const getNewAccessToken = async (refreshToken: string) => {
+  const payload = verifyToken(refreshToken, "refresh") as UserPayload;
+  if (!payload) {
+    return {
+      success: false,
+      status: StatusCode.UNAUTHORIZED,
+      message: "Unauthorized! Refresh token is invalid, expired, or you're not signed in! Please sign in again!.",
+      data: null
+    };
+  }
+
+  try {
+    const newAccessToken = signToken(payload, "access");
+    return {
+      success: true,
+      status: StatusCode.OK,
+      message: "New access token created successfully!",
+      data: {
+        refreshToken: refreshToken,
+        accessToken: newAccessToken
+      }
+    };
+  } catch {
+    return {
+      success: false,
+      status: StatusCode.INTERNAL_SERVER_ERROR,
+      message: "Something went wrong!",
+      data: null
+    };
+  }
+};

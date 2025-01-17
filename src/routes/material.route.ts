@@ -14,4 +14,4 @@ materialRouter.get("/", authMiddleware, accessMiddleware, getMaterialsController
 materialRouter.get("/:id", authMiddleware, accessMiddleware, getMaterialByIdController);
 materialRouter.post("/", authMiddleware, accessMiddleware, roleMiddleware, postMaterialController);
 
-export default materialRouter;
+export { materialRouter };

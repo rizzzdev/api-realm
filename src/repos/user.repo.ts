@@ -1,40 +1,76 @@
 import { User } from "../types/user.type";
 import prisma from "../database";
+import { Token } from "../types/token.type";
+import { Mark } from "../types/mark.type";
+import { Activity } from "../types/activity.type";
 
-export const createUser = async (userData: User) => {
+export const createUser = async (userData: User<Token, Mark, Activity>) => {
   return await prisma.users.create({
     data: {
-      full_name: userData.fullName,
-      id: userData.userId,
-      pass_word: userData.password,
-      avatar_url: userData.avatarUrl,
+      fullName: userData.fullName,
+      username: userData.username,
+      password: userData.password,
       gender: userData.gender,
+      avatarUrl: userData.avatarUrl,
       role: userData.role,
-      registered_at: userData.registeredAt,
-      deleted_at: userData.deletedAt
+      signedUpAt: userData.signedUpAt,
+      deletedAt: userData.deletedAt,
+      tokens: {
+        create: []
+      },
+      marks: {
+        create: []
+      },
+      activities: {
+        create: []
+      }
     }
   });
 };
 
 export const findUsers = async () => {
-  return await prisma.users.findMany();
+  return await prisma.users.findMany({
+    include: {
+      tokens: true,
+      marks: true,
+      activities: true
+    }
+  });
 };
 
 export const findUserById = async (id: string) => {
-  return await prisma.users.findFirst({ where: { id } });
+  return await prisma.users.findFirst({
+    include: {
+      tokens: true,
+      marks: true,
+      activities: true
+    },
+    where: { id }
+  });
 };
 
-export const updateUserById = async (id: string, userData: User) => {
+export const findUserByUsername = async (username: string) => {
+  return await prisma.users.findFirst({
+    include: {
+      tokens: true,
+      marks: true,
+      activities: true
+    },
+    where: { username }
+  });
+};
+
+export const updateUserById = async (id: string, userData: User<Token, Mark, Activity>) => {
   return await prisma.users.update({
     data: {
-      full_name: userData.fullName,
-      id: userData.userId,
-      pass_word: userData.password,
-      avatar_url: userData.avatarUrl,
+      fullName: userData.fullName,
+      username: userData.username,
+      password: userData.password,
       gender: userData.gender,
+      avatarUrl: userData.avatarUrl,
       role: userData.role,
-      registered_at: userData.registeredAt,
-      deleted_at: userData.deletedAt
+      signedUpAt: userData.signedUpAt,
+      deletedAt: userData.deletedAt
     },
     where: { id }
   });

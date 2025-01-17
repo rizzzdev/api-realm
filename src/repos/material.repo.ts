@@ -1,36 +1,61 @@
 import { Material } from "../types/material.type";
 import prisma from "../database";
+import { Activity } from "../types/activity.type";
+import { Quiz } from "../types/quiz.type";
+import { Question } from "../types/question.type";
+import { Mark } from "../types/mark.type";
 
-export const createMaterial = async (materialData: Material) => {
-  return await prisma.learningMaterials.create({
+export const createMaterial = async (materialData: Material<Activity, Quiz<Question, Mark>>) => {
+  return await prisma.materials.create({
     data: {
       title: materialData.title,
       description: materialData.description,
-      image_url: materialData.imageUrl,
-      material_url: materialData.materialUrl,
-      created_at: materialData.createdAt,
-      deleted_at: materialData.deletedAt
+      imageUrl: materialData.imageUrl,
+      materialString: materialData.materialString,
+      createdAt: materialData.createdAt,
+      deletedAt: materialData.deletedAt,
+      activities: {
+        create: []
+      },
+      quiz: {
+        create: {
+          createdAt: materialData.createdAt
+        }
+      }
     }
   });
 };
 
 export const findMaterials = async () => {
-  return await prisma.learningMaterials.findMany();
+  return await prisma.materials.findMany({
+    include: {
+      activities: true,
+      quiz: true
+    }
+  });
 };
 
 export const findMaterialById = async (id: string) => {
-  return await prisma.learningMaterials.findFirst({ where: { id } });
+  return await prisma.materials.findFirst({
+    include: {
+      activities: true,
+      quiz: true
+    },
+    where: {
+      id: id
+    }
+  });
 };
 
-export const updateMaterialById = async (id: string, materialData: Material) => {
-  return await prisma.learningMaterials.update({
+export const updateMaterialById = async (id: string, materialData: Material<Activity, Quiz<Question, Mark>>) => {
+  return await prisma.materials.update({
     data: {
       title: materialData.title,
       description: materialData.description,
-      image_url: materialData.imageUrl,
-      material_url: materialData.materialUrl,
-      created_at: materialData.createdAt,
-      deleted_at: materialData.deletedAt
+      imageUrl: materialData.imageUrl,
+      materialString: materialData.materialString,
+      createdAt: materialData.createdAt,
+      deletedAt: materialData.deletedAt
     },
     where: { id }
   });

@@ -1,12 +1,12 @@
-import materialValidation from "../validations/material.validation";
-import { Material } from "../types/material.type";
-import { ApiResponse, StatusCode } from "../types/api-response.type";
+import { postMaterialRequestValidation } from "../validations/material.validation";
+import { PostMaterialRequest } from "../types/material.type";
+import { StatusCode } from "../types/api.type";
 import { createMaterial, findMaterialById, findMaterials, updateMaterialById } from "../repos/material.repo";
 import { datetime } from "../utils/datetime.util";
-import { LearningMaterials } from ".prisma/client";
+import { apiResponse } from "../utils/response.util";
 
-export const postMaterial = async (materialData: Material): Promise<ApiResponse<null | LearningMaterials>> => {
-  const { error } = materialValidation(materialData);
+export const postMaterial = async (materialData: PostMaterialRequest) => {
+  const { error } = postMaterialRequestValidation(materialData);
   if (error) {
     return {
       success: false,
@@ -17,75 +17,51 @@ export const postMaterial = async (materialData: Material): Promise<ApiResponse<
   }
 
   try {
-    const data = await createMaterial({
+    const material = await createMaterial({
       title: materialData.title
         .toLowerCase()
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" "),
-      description: materialData.description + "...",
+      description: materialData.description.slice(0, 100) + "...",
       imageUrl: materialData.imageUrl,
-      materialUrl: materialData.materialUrl,
-      createdAt: datetime()
+      materialString: materialData.materialString,
+      createdAt: datetime(),
+      quiz: {
+        createdAt: datetime()
+      }
     });
-    return {
-      success: true,
-      status: StatusCode.CREATED,
-      message: "Material created successfully!",
-      data: data
-    };
+
+    const result = apiResponse(true, StatusCode.CREATED, "Material created successfully!", material);
+    return result;
   } catch {
-    return {
-      success: false,
-      status: StatusCode.INTERNAL_SERVER_ERROR,
-      message: "Something went wrong!",
-      data: null
-    };
+    const result = apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
+    return result;
   }
 };
 
-export const GetAllMaterials = async (): Promise<ApiResponse<null | LearningMaterials[]>> => {
-  const data = await findMaterials();
-  if (data.length === 0) {
-    return {
-      success: false,
-      status: StatusCode.NOT_FOUND,
-      message: "No materials found!",
-      data: null
-    };
+export const GetAllMaterials = async () => {
+  const materials = await findMaterials();
+  if (materials.length === 0) {
+    const result = apiResponse(false, StatusCode.NOT_FOUND, "Materials not found!", []);
+    return result;
   }
 
-  return {
-    success: true,
-    status: StatusCode.OK,
-    message: "Materials found successfully!",
-    data: data
-  };
+  const result = apiResponse(true, StatusCode.OK, "Get all materials successfully!", materials);
+  return result;
 };
 
-export const getMaterialById = async (id: string): Promise<ApiResponse<null | LearningMaterials>> => {
-  const data = await findMaterialById(id);
-  if (!data) {
-    return {
-      success: false,
-      status: StatusCode.NOT_FOUND,
-      message: "Material not found!",
-      data: null
-    };
+export const getMaterialById = async (id: string) => {
+  const material = await findMaterialById(id);
+  if (!material) {
+    const result = apiResponse(false, StatusCode.NOT_FOUND, "Material not found!", null);
+    return result;
   }
-
-  return {
-    success: true,
-    status: StatusCode.OK,
-    message: "Get material successfully!",
-    data: data
-  };
+  const result = apiResponse(true, StatusCode.OK, "Get material successfully!", material);
+  return result;
 };
 
-export const patchMaterialById = async (
-  id: string,
-  materialData: Material
-): Promise<ApiResponse<null | LearningMaterials>> => {
+export const patchMaterialById = async (id: string, materialData: PostMaterialRequest) => {
   const material = await findMaterialById(id);
   if (!material) {
     return {
@@ -95,74 +71,26 @@ export const patchMaterialById = async (
       data: null
     };
   }
-
-  const materialConverted: Material = {
-    title: materialData.title,
-    description: material.description,
-    imageUrl: material.image_url,
-    materialUrl: material.material_url,
-    createdAt: material.created_at
-  };
-
   try {
     const data = await updateMaterialById(id, {
-      ...materialConverted,
-      ...materialData
+      title: materialData.title
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" "),
+      description: materialData.description.slice(0, 100) + "...",
+      materialString: materialData.materialString,
+      imageUrl: materialData.imageUrl,
+      createdAt: material.createdAt,
+      quiz: {
+        createdAt: material.createdAt
+      }
     });
-    return {
-      success: true,
-      status: StatusCode.OK,
-      message: "Material updated successfully!",
-      data: data
-    };
+
+    const result = apiResponse(true, StatusCode.OK, "Material updated successfully!", data);
+    return result;
   } catch {
-    return {
-      success: false,
-      status: StatusCode.INTERNAL_SERVER_ERROR,
-      message: "Something went wrong!",
-      data: null
-    };
-  }
-};
-
-export const putMaterialById = async (
-  id: string,
-  materialData: Material
-): Promise<ApiResponse<null | LearningMaterials>> => {
-  const material = await findMaterialById(id);
-  if (!material) {
-    return {
-      success: false,
-      status: StatusCode.NOT_FOUND,
-      message: "Material not found!",
-      data: null
-    };
-  }
-
-  const { error } = materialValidation(materialData);
-  if (error) {
-    return {
-      success: false,
-      status: StatusCode.BAD_REQUEST,
-      message: error.message,
-      data: null
-    };
-  }
-
-  try {
-    const data = await updateMaterialById(id, materialData);
-    return {
-      success: true,
-      status: StatusCode.OK,
-      message: "Material updated successfully!",
-      data: data
-    };
-  } catch {
-    return {
-      success: false,
-      status: StatusCode.INTERNAL_SERVER_ERROR,
-      message: "Something went wrong!",
-      data: null
-    };
+    const result = apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
+    return result;
   }
 };

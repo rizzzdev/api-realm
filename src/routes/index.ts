@@ -1,20 +1,29 @@
 import { Application, Router } from "express";
-import introRouter from "./intro.route";
-import loginRouter from "./login.route";
-import registerRouter from "./register.route";
-import tokenRouter from "./token.route";
-import logoutRouter from "./logout.route";
-import userRouter from "./user.route";
-import materialRouter from "./material.route";
+import { introRouter } from "./intro.route";
+import { getNewAccessTokenRouter } from "./token.route";
+import { signInUserRouter, userRouter, signUpUserRouter, signOutUserRouter } from "./user.route";
+import { materialRouter } from "./material.route";
+import { questionRouter } from "./question.route";
+import { quizRouter } from "./quiz.route";
+import { testRouter } from "./test.route";
+import { activityRouter } from "./activity.route";
+import { markRouter } from "./mark.route";
+import { leaderboardRouter } from "./leaderboard.route";
 
 const _routes: [string, Router][] = [
   ["/", introRouter],
-  ["/login", loginRouter],
-  ["/register", registerRouter],
-  ["/token", tokenRouter],
-  ["/logout", logoutRouter],
+  ["/signin", signInUserRouter],
+  ["/signout", signOutUserRouter],
+  ["/signup", signUpUserRouter],
   ["/users", userRouter],
-  ["/materials", materialRouter]
+  ["/new-access-token", getNewAccessTokenRouter],
+  ["/materials", materialRouter],
+  ["/questions", questionRouter],
+  ["/quizzes", quizRouter],
+  ["/tests/", testRouter],
+  ["/activities", activityRouter],
+  ["/marks", markRouter],
+  ["/leaderboard", leaderboardRouter]
 ];
 
 const routes = (app: Application) => {

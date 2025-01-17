@@ -1,16 +1,12 @@
 import Joi from "joi";
-import { Material } from "../types/material.type";
+import { PostMaterialRequest } from "../types/material.type";
 
-const materialValidation = (materialData: Material) => {
+export const postMaterialRequestValidation = (materialData: PostMaterialRequest) => {
   const schema = Joi.object({
     title: Joi.string().min(1).max(100).required(),
-    description: Joi.string().min(1).max(100).required(),
+    description: Joi.string().min(1).required(),
     imageUrl: Joi.string().required(),
-    materialUrl: Joi.string().required(),
-    createdAt: Joi.date().optional(),
-    deletedAt: Joi.date().optional()
+    materialString: Joi.string().required()
   });
   return schema.validate(materialData);
 };
-
-export default materialValidation;

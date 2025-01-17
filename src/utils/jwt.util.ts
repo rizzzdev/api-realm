@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import { JwtPayload } from "../types/api-response.type";
 import ENV from "../configs/env.config";
+import { Gender, UserPayload } from "../types/user.type";
 
-export const createToken = (payload: JwtPayload, type: "access" | "refresh"): string => {
+export const signToken = (payload: UserPayload, type: "access" | "refresh"): string => {
   if (type === "refresh") {
     return jwt.sign(payload, ENV.REFRESH_TOKEN_SECRET_KEY ?? "", { expiresIn: "1d" });
   } else {
@@ -13,22 +13,22 @@ export const createToken = (payload: JwtPayload, type: "access" | "refresh"): st
 export const verifyToken = (token: string, type: "access" | "refresh") => {
   if (type === "access") {
     try {
-      const { userId, fullName, gender, avatarUrl } = jwt.verify(
+      const { id, username, fullName, gender, avatarUrl } = jwt.verify(
         token ?? "",
         ENV.ACCESS_TOKEN_SECRET_KEY ?? ""
-      ) as JwtPayload;
-      const payload: JwtPayload = { userId, fullName, gender, avatarUrl };
+      ) as UserPayload;
+      const payload: UserPayload = { id, username, fullName, gender, avatarUrl };
       return payload;
     } catch {
       return false;
     }
   } else {
     try {
-      const { userId, fullName, gender, avatarUrl } = jwt.verify(
+      const { id, username, fullName, gender, avatarUrl } = jwt.verify(
         token ?? "",
         ENV.REFRESH_TOKEN_SECRET_KEY ?? ""
-      ) as JwtPayload;
-      const payload: JwtPayload = { userId, fullName, gender, avatarUrl };
+      ) as UserPayload;
+      const payload: UserPayload = { id, username, fullName, gender, avatarUrl };
       return payload;
     } catch {
       return false;

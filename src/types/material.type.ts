@@ -1,8 +1,18 @@
-export interface Material {
+export interface Material<ActivityType, QuizType> {
+  readonly id?: string;
   title: string;
   description: string;
   imageUrl: string;
-  materialUrl: string;
+  materialString: string;
   createdAt: Date;
-  deletedAt?: Date;
+  deletedAt?: Date | undefined;
+  activities?: ActivityType[];
+  quiz: QuizType;
+}
+
+export interface PostMaterialRequest {
+  title: string;
+  description: string;
+  imageUrl: string;
+  materialString: string;
 }
