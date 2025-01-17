@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "https://client-realm.vercel.app/",
+    origin: ENV.CLIENT_URL,
     methods: ["GET", "POST", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"]
   })
