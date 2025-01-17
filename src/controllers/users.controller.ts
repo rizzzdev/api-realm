@@ -65,7 +65,11 @@ export const signInUserController = async (request: Request, response: Response)
 
   logger.info(`${signInUserResponse.message.toUpperCase()}: REQUESTED BY: ${signInData.username.toUpperCase()}`);
   response
-    .cookie("refresh-token", signInUserResponse.data!.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+    .cookie("refresh-token", signInUserResponse.data!.refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true
+    })
     .status(signInUserResponse.status)
     .send(signInUserResponse);
 };
@@ -83,7 +87,7 @@ export const signOutUserController = async (request: Request, response: Response
 
   logger.info(`${signOutUserResponse.message.toUpperCase()}: REQUESTED BY ${payload.username.toUpperCase()}`);
   response
-    .cookie("refresh-token", "", { httpOnly: true, maxAge: 0 })
+    .cookie("refresh-token", "", { httpOnly: true, maxAge: 0, secure: true })
     .status(signOutUserResponse.status)
     .send(signOutUserResponse);
 };
