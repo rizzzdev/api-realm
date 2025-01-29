@@ -196,14 +196,67 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.UsersOrderByRelevanceFieldEnum = {
+  id: 'id',
+  username: 'username',
+  password: 'password',
+  fullName: 'fullName',
+  avatarUrl: 'avatarUrl'
+};
+
+exports.Prisma.MaterialsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  materialString: 'materialString'
+};
+
+exports.Prisma.ActivitiesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  materialId: 'materialId',
+  userId: 'userId'
+};
+
+exports.Prisma.TokensOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  refreshToken: 'refreshToken'
+};
+
+exports.Prisma.TestsOrderByRelevanceFieldEnum = {
+  id: 'id'
+};
+
+exports.Prisma.QuizzesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  materialId: 'materialId'
+};
+
+exports.Prisma.QuestionsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  testId: 'testId',
+  quizId: 'quizId',
+  question: 'question',
+  imageUrl: 'imageUrl',
+  optionA: 'optionA',
+  optionB: 'optionB',
+  optionC: 'optionC',
+  optionD: 'optionD',
+  optionE: 'optionE',
+  correctOption: 'correctOption'
+};
+
+exports.Prisma.MarksOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  testId: 'testId',
+  quizId: 'quizId'
 };
 exports.Gender = exports.$Enums.Gender = {
   MALE: 'MALE',
