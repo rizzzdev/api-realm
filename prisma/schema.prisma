@@ -8,16 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_DEV")
-}
-
 // datasource db {
-//   provider  = "postgresql"
-//   url       = env("DATABASE_URL_PROD")
-//   directUrl = env("DIRECT_URL_PRD")
+//   provider = "mysql"
+//   url      = env("DATABASE_URL_DEV")
 // }
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_PROD")
+  directUrl = env("DIRECT_URL_PRD")
+}
 
 model Users {
   id         String       @id @default(uuid())
@@ -39,7 +39,8 @@ model Materials {
   title          String
   description    String
   imageUrl       String
-  materialString String       @db.LongText
+  // materialString String       @db.LongText
+  materialString String
   quiz           Quizzes?
   activities     Activities[]
   createdAt      DateTime
@@ -60,7 +61,8 @@ model Tokens {
   userId       String
   loggedInAt   DateTime
   loggedOutAt  DateTime?
-  refreshToken String?   @db.LongText
+  // refreshToken String?   @db.LongText
+  refreshToken String?
 }
 
 model Tests {
