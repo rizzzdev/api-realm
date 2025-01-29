@@ -5,7 +5,8 @@ import { datetimeToEpoch } from "../utils/datetime.util";
 
 export const getLeaderboard = async () => {
   const users = (await getUsers()).data;
-  const leaderboard = users.map((user) => {
+  const studentUsers = users.filter((user) => user.role === "STUDENT");
+  const leaderboard = studentUsers.map((user) => {
     return {
       username: user.username,
       fullName: user.fullName,
