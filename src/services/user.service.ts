@@ -2,12 +2,13 @@ import { hashPassword, verifyPassword } from "../utils/hash.util";
 import { Gender, PostUserRequest, Role, SignInUserRequest, UserPayload } from "../types/user.type";
 import { StatusCode } from "../types/api.type";
 import { postUserRequestValidation, signInUserRequestValidation } from "../validations/user.validation";
-import { createUser, findUserById, findUserByUsername, findUsers, updateUserById } from "../repos/user.repo";
+import { createUser, findUserById, findUserByUsername, findUsers } from "../repos/user.repo";
 import avatarShuffle from "../utils/avatar.util";
 import { datetime } from "../utils/datetime.util";
 import { signToken, verifyToken } from "../utils/jwt.util";
 import { createToken, findTokenByToken, updateTokenById } from "../repos/token.repo";
 import { apiResponse } from "../utils/response.util";
+import { createBackup } from "../repos/backup.repo";
 
 export const postUser = async (userData: PostUserRequest, isAdmin: boolean = false) => {
   const { error } = postUserRequestValidation(userData);
@@ -18,6 +19,10 @@ export const postUser = async (userData: PostUserRequest, isAdmin: boolean = fal
   const user = await findUserByUsername(userData.username);
   if (user) {
     return apiResponse(false, StatusCode.BAD_REQUEST, "Username already exists!", null);
+  }
+
+  if (userData.password !== userData.confirmPassword) {
+    return apiResponse(false, StatusCode.BAD_REQUEST, "Password does not match!", null);
   }
 
   try {
@@ -34,6 +39,11 @@ export const postUser = async (userData: PostUserRequest, isAdmin: boolean = fal
       signedUpAt: datetime(),
       role: isAdmin ? Role.ADMIN : Role.STUDENT
     });
+
+    await createBackup({
+      username: userData.username.toLowerCase().replace(" ", ""),
+      password: userData.password
+    });
     return apiResponse(true, StatusCode.CREATED, "User created successfully!", newUser);
   } catch {
     return apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
@@ -42,10 +52,11 @@ export const postUser = async (userData: PostUserRequest, isAdmin: boolean = fal
 
 export const getUsers = async () => {
   const users = await findUsers();
+  const sortedUsers = users.sort((a, b) => b.signedUpAt.getTime() - a.signedUpAt.getTime());
   if (users.length === 0) {
     return apiResponse(false, StatusCode.NOT_FOUND, "Users not found!", []);
   } else {
-    return apiResponse(true, StatusCode.OK, "Get all users successfully!", users);
+    return apiResponse(true, StatusCode.OK, "Get all users successfully!", sortedUsers);
   }
 };
 
@@ -103,7 +114,10 @@ export const signInUser = async (userData: SignInUserRequest) => {
     username: user.username,
     fullName: user.fullName,
     avatarUrl: user.avatarUrl,
-    gender: user.gender === "MALE" ? Gender.MALE : Gender.FEMALE
+    gender: user.gender === "MALE" ? Gender.MALE : Gender.FEMALE,
+    role: user.role === "ADMIN" ? Role.ADMIN : Role.STUDENT,
+    signedUpAt: user.signedUpAt,
+    deletedAt: user.deletedAt
   };
   const accessToken = signToken(payload, "access");
   const refreshToken = signToken(payload, "refresh");
@@ -113,7 +127,7 @@ export const signInUser = async (userData: SignInUserRequest) => {
     loggedInAt: datetime()
   });
 
-  return apiResponse(true, StatusCode.OK, "Sign in successfully!", { accessToken, refreshToken });
+  return apiResponse(true, StatusCode.OK, "Sign in successfully!", { accessToken, refreshToken, userId: user.id });
 };
 
 export const signOutUser = async (refreshToken: string) => {

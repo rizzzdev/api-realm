@@ -34,3 +34,9 @@ export const updateTokenById = async (id: string, tokenData: Token) => {
     where: { id }
   });
 };
+
+export const deleteTokensByUserId = async (userId: string) => {
+  return await prisma.tokens.deleteMany({
+    where: { userId }
+  });
+};

@@ -20,7 +20,7 @@ const _routes: [string, Router][] = [
   ["/materials", materialRouter],
   ["/questions", questionRouter],
   ["/quizzes", quizRouter],
-  ["/tests/", testRouter],
+  ["/tests", testRouter],
   ["/activities", activityRouter],
   ["/marks", markRouter],
   ["/leaderboard", leaderboardRouter]

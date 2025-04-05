@@ -26,8 +26,9 @@ export const getQuestions = async () => {
   if (!questions) {
     return apiResponse(false, StatusCode.NOT_FOUND, "Questions not found!", []);
   }
+  const sortedQuestions = questions.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
-  return apiResponse(true, StatusCode.OK, "Get questions successfully!", questions);
+  return apiResponse(true, StatusCode.OK, "Get questions successfully!", sortedQuestions);
 };
 
 export const getQuestionById = async (id: string) => {

@@ -5,6 +5,7 @@ import { postMarkRequestValidation } from "../validations/mark.validation";
 import { PostMarkRequest } from "../types/mark.type";
 import { datetime } from "../utils/datetime.util";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
+import { findUserById } from "../repos/user.repo";
 
 export const postMark = async (markData: PostMarkRequest) => {
   const { error } = postMarkRequestValidation(markData);
@@ -40,13 +41,21 @@ export const postMark = async (markData: PostMarkRequest) => {
   }
 };
 
-export const getMarks = async () => {
+export const getMarks = async (userId: string) => {
   try {
     const marks = await findMarks();
+    const user = await findUserById(userId);
+    const markWithUserFullName = marks.map((mark) => {
+      return {
+        ...mark,
+        userFullName: user?.fullName
+      };
+    });
+
     if (marks.length === 0) {
       return apiResponse(false, StatusCode.NOT_FOUND, "Marks not found!", []);
     }
-    return apiResponse(true, StatusCode.OK, "Get marks successfully!", marks);
+    return apiResponse(true, StatusCode.OK, "Get marks successfully!", markWithUserFullName);
   } catch {
     return apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
   }
@@ -54,11 +63,13 @@ export const getMarks = async () => {
 
 export const getMarkByUserIdAndQuizId = async (userId: string, quizId: string) => {
   try {
+    const user = await findUserById(userId);
     const mark = await findMarkByUserIdAndQuizId(userId, quizId);
+    const markWithUserFullName = { ...mark, userFullName: user?.fullName };
     if (!mark) {
       return apiResponse(false, StatusCode.NOT_FOUND, "Mark not found!", null);
     }
-    return apiResponse(true, StatusCode.OK, "Get mark successfully!", mark);
+    return apiResponse(true, StatusCode.OK, "Get mark successfully!", markWithUserFullName);
   } catch {
     return apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
   }
@@ -66,11 +77,13 @@ export const getMarkByUserIdAndQuizId = async (userId: string, quizId: string) =
 
 export const getMarkByUserIdAndTestId = async (userId: string, testId: string) => {
   try {
+    const user = await findUserById(userId);
     const mark = await findMarkByUserIdAndTestId(userId, testId);
+    const markWithUserFullName = { ...mark, userFullName: user?.fullName };
     if (!mark) {
       return apiResponse(false, StatusCode.NOT_FOUND, "Mark not found!", null);
     }
-    return apiResponse(true, StatusCode.OK, "Get mark successfully!", mark);
+    return apiResponse(true, StatusCode.OK, "Get mark successfully!", markWithUserFullName);
   } catch {
     return apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
   }

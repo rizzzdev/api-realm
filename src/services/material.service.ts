@@ -23,7 +23,7 @@ export const postMaterial = async (materialData: PostMaterialRequest) => {
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" "),
-      description: materialData.description.slice(0, 100) + "...",
+      description: materialData.description,
       imageUrl: materialData.imageUrl,
       materialString: materialData.materialString,
       createdAt: datetime(),
@@ -42,12 +42,13 @@ export const postMaterial = async (materialData: PostMaterialRequest) => {
 
 export const GetAllMaterials = async () => {
   const materials = await findMaterials();
+  const materialsSorted = materials.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   if (materials.length === 0) {
     const result = apiResponse(false, StatusCode.NOT_FOUND, "Materials not found!", []);
     return result;
   }
 
-  const result = apiResponse(true, StatusCode.OK, "Get all materials successfully!", materials);
+  const result = apiResponse(true, StatusCode.OK, "Get all materials successfully!", materialsSorted);
   return result;
 };
 

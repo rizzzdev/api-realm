@@ -117,6 +117,12 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.BackupScalarFieldEnum = {
+  id: 'id',
+  username: 'username',
+  password: 'password'
+};
+
 exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -142,7 +148,12 @@ exports.Prisma.MaterialsScalarFieldEnum = {
 exports.Prisma.ActivitiesScalarFieldEnum = {
   id: 'id',
   materialId: 'materialId',
-  userId: 'userId'
+  testId: 'testId',
+  quizId: 'quizId',
+  activityType: 'activityType',
+  message: 'message',
+  userId: 'userId',
+  doneAt: 'doneAt'
 };
 
 exports.Prisma.TokensScalarFieldEnum = {
@@ -155,6 +166,9 @@ exports.Prisma.TokensScalarFieldEnum = {
 
 exports.Prisma.TestsScalarFieldEnum = {
   id: 'id',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
   createdAt: 'createdAt',
   deletedAt: 'deletedAt'
 };
@@ -196,67 +210,14 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.UsersOrderByRelevanceFieldEnum = {
-  id: 'id',
-  username: 'username',
-  password: 'password',
-  fullName: 'fullName',
-  avatarUrl: 'avatarUrl'
-};
-
-exports.Prisma.MaterialsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  imageUrl: 'imageUrl',
-  materialString: 'materialString'
-};
-
-exports.Prisma.ActivitiesOrderByRelevanceFieldEnum = {
-  id: 'id',
-  materialId: 'materialId',
-  userId: 'userId'
-};
-
-exports.Prisma.TokensOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  refreshToken: 'refreshToken'
-};
-
-exports.Prisma.TestsOrderByRelevanceFieldEnum = {
-  id: 'id'
-};
-
-exports.Prisma.QuizzesOrderByRelevanceFieldEnum = {
-  id: 'id',
-  materialId: 'materialId'
-};
-
-exports.Prisma.QuestionsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  testId: 'testId',
-  quizId: 'quizId',
-  question: 'question',
-  imageUrl: 'imageUrl',
-  optionA: 'optionA',
-  optionB: 'optionB',
-  optionC: 'optionC',
-  optionD: 'optionD',
-  optionE: 'optionE',
-  correctOption: 'correctOption'
-};
-
-exports.Prisma.MarksOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  testId: 'testId',
-  quizId: 'quizId'
 };
 exports.Gender = exports.$Enums.Gender = {
   MALE: 'MALE',
@@ -268,7 +229,15 @@ exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN'
 };
 
+exports.ActivityType = exports.$Enums.ActivityType = {
+  MATERIAL: 'MATERIAL',
+  QUIZ: 'QUIZ',
+  TEST: 'TEST',
+  SIMULATION: 'SIMULATION'
+};
+
 exports.Prisma.ModelName = {
+  Backup: 'Backup',
   Users: 'Users',
   Materials: 'Materials',
   Activities: 'Activities',

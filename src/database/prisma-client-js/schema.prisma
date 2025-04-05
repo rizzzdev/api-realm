@@ -9,16 +9,22 @@ generator client {
   output   = "../src/database/prisma-client-js"
 }
 
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL_DEV")
+// }
+
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_DEV")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_PROD")
+  directUrl = env("DIRECT_URL_PROD")
 }
 
-// datasource db {
-//   provider  = "postgresql"
-//   url       = env("DATABASE_URL_PROD")
-//   directUrl = env("DIRECT_URL_PROD")
-// }
+model Backup {
+  id       String @id @default(uuid())
+  username String
+  password String
+}
 
 model Users {
   id         String       @id @default(uuid())
@@ -40,20 +46,27 @@ model Materials {
   title          String
   description    String
   imageUrl       String
-  materialString String       @db.LongText
-  // materialString String
+  // materialString String       @db.LongText
+  materialString String
   quiz           Quizzes?
-  activities     Activities[]
   createdAt      DateTime
   deletedAt      DateTime?
+  activity       Activities[]
 }
 
 model Activities {
-  id         String    @id @default(uuid())
-  material   Materials @relation(fields: [materialId], references: [id])
-  materialId String
-  user       Users     @relation(fields: [userId], references: [id])
-  userId     String
+  id           String       @id @default(uuid())
+  material     Materials?   @relation(fields: [materialId], references: [id])
+  materialId   String?
+  test         Tests?       @relation(fields: [testId], references: [id])
+  testId       String?
+  quiz         Quizzes?     @relation(fields: [quizId], references: [id])
+  quizId       String?
+  activityType ActivityType
+  message      String
+  user         Users        @relation(fields: [userId], references: [id])
+  userId       String
+  doneAt       DateTime
 }
 
 model Tokens {
@@ -62,26 +75,31 @@ model Tokens {
   userId       String
   loggedInAt   DateTime
   loggedOutAt  DateTime?
-  refreshToken String?   @db.LongText
-  // refreshToken String?
+  // refreshToken String?   @db.LongText
+  refreshToken String?
 }
 
 model Tests {
-  id        String      @id @default(uuid())
-  questions Questions[]
-  mark      Marks[]
-  createdAt DateTime
-  deletedAt DateTime?
+  id          String       @id @default(uuid())
+  activity    Activities[]
+  questions   Questions[]
+  mark        Marks[]
+  title       String
+  description String
+  imageUrl    String
+  createdAt   DateTime
+  deletedAt   DateTime?
 }
 
 model Quizzes {
-  id         String      @id @default(uuid())
-  material   Materials   @relation(fields: [materialId], references: [id])
-  materialId String      @unique @default("")
+  id         String       @id @default(uuid())
+  material   Materials    @relation(fields: [materialId], references: [id])
+  materialId String       @unique @default("")
   questions  Questions[]
   marks      Marks[]
   createdAt  DateTime
   deletedAt  DateTime?
+  activity   Activities[]
 }
 
 model Questions {
@@ -125,4 +143,11 @@ enum Gender {
 enum Role {
   STUDENT
   ADMIN
+}
+
+enum ActivityType {
+  MATERIAL
+  QUIZ
+  TEST
+  SIMULATION
 }

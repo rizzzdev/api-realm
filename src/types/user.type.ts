@@ -1,4 +1,8 @@
-export interface User<TokenType, MarkType, ActivityType> {
+import { Activity } from "./activity.type";
+import { Mark } from "./mark.type";
+import { Token } from "./token.type";
+
+export interface User {
   readonly id?: string;
   username: string;
   password: string;
@@ -8,14 +12,15 @@ export interface User<TokenType, MarkType, ActivityType> {
   signedUpAt: Date;
   deletedAt?: Date;
   role: Role;
-  tokens?: TokenType[];
-  marks?: MarkType[];
-  activities?: ActivityType[];
+  tokens?: Token[];
+  marks?: Mark[];
+  activities?: Activity[];
 }
 
 export interface PostUserRequest {
   username: string;
   password: string;
+  confirmPassword: string;
   fullName: string;
   gender: Gender;
 }
@@ -31,6 +36,9 @@ export interface UserPayload {
   fullName: string;
   gender: Gender;
   avatarUrl: string;
+  role: Role;
+  signedUpAt: Date;
+  deletedAt?: Date | null;
 }
 
 export enum Gender {

@@ -7,7 +7,7 @@ import { getTests, postTest } from "../services/test.service";
 export const postTestController = async (request: Request, response: Response) => {
   const accessToken = request.headers.authorization!.split(" ")[1];
   const userPayload = verifyToken(accessToken, "access") as UserPayload;
-  const test = await postTest();
+  const test = await postTest(request.body);
 
   if (!test.success) {
     logger.error(`${test.message.toUpperCase()}: ${userPayload.username}`);

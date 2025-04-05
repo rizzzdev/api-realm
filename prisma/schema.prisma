@@ -20,6 +20,12 @@ datasource db {
   directUrl = env("DIRECT_URL_PROD")
 }
 
+model Backup {
+  id       String @id @default(uuid())
+  username String
+  password String
+}
+
 model Users {
   id         String       @id @default(uuid())
   username   String       @unique
@@ -43,17 +49,24 @@ model Materials {
   // materialString String       @db.LongText
   materialString String
   quiz           Quizzes?
-  activities     Activities[]
   createdAt      DateTime
   deletedAt      DateTime?
+  activity       Activities[]
 }
 
 model Activities {
-  id         String    @id @default(uuid())
-  material   Materials @relation(fields: [materialId], references: [id])
-  materialId String
-  user       Users     @relation(fields: [userId], references: [id])
-  userId     String
+  id           String       @id @default(uuid())
+  material     Materials?   @relation(fields: [materialId], references: [id])
+  materialId   String?
+  test         Tests?       @relation(fields: [testId], references: [id])
+  testId       String?
+  quiz         Quizzes?     @relation(fields: [quizId], references: [id])
+  quizId       String?
+  activityType ActivityType
+  message      String
+  user         Users        @relation(fields: [userId], references: [id])
+  userId       String
+  doneAt       DateTime
 }
 
 model Tokens {
@@ -67,21 +80,26 @@ model Tokens {
 }
 
 model Tests {
-  id        String      @id @default(uuid())
-  questions Questions[]
-  mark      Marks[]
-  createdAt DateTime
-  deletedAt DateTime?
+  id          String       @id @default(uuid())
+  activity    Activities[]
+  questions   Questions[]
+  mark        Marks[]
+  title       String
+  description String
+  imageUrl    String
+  createdAt   DateTime
+  deletedAt   DateTime?
 }
 
 model Quizzes {
-  id         String      @id @default(uuid())
-  material   Materials   @relation(fields: [materialId], references: [id])
-  materialId String      @unique @default("")
+  id         String       @id @default(uuid())
+  material   Materials    @relation(fields: [materialId], references: [id])
+  materialId String       @unique @default("")
   questions  Questions[]
   marks      Marks[]
   createdAt  DateTime
   deletedAt  DateTime?
+  activity   Activities[]
 }
 
 model Questions {
@@ -125,4 +143,11 @@ enum Gender {
 enum Role {
   STUDENT
   ADMIN
+}
+
+enum ActivityType {
+  MATERIAL
+  QUIZ
+  TEST
+  SIMULATION
 }

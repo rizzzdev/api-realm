@@ -4,8 +4,13 @@ import prisma from "../database";
 export const createActivity = async (activityData: Activity) => {
   return await prisma.activities.create({
     data: {
+      activityType: activityData.activityType,
+      message: activityData.message,
+      userId: activityData.userId,
+      doneAt: activityData.doneAt,
+      quizId: activityData.quizId,
       materialId: activityData.materialId,
-      userId: activityData.userId
+      testId: activityData.testId
     }
   });
 };
@@ -21,9 +26,20 @@ export const findActivityById = async (id: string) => {
 export const updateActivityById = async (id: string, activityData: Activity) => {
   return await prisma.activities.update({
     data: {
+      activityType: activityData.activityType,
+      message: activityData.message,
+      userId: activityData.userId,
+      doneAt: activityData.doneAt,
+      quizId: activityData.quizId,
       materialId: activityData.materialId,
-      userId: activityData.userId
+      testId: activityData.testId
     },
     where: { id }
+  });
+};
+
+export const deleteActivitiesByUserId = async (userId: string) => {
+  return await prisma.activities.deleteMany({
+    where: { userId }
   });
 };

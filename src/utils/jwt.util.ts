@@ -13,22 +13,22 @@ export const signToken = (payload: UserPayload, type: "access" | "refresh"): str
 export const verifyToken = (token: string, type: "access" | "refresh") => {
   if (type === "access") {
     try {
-      const { id, username, fullName, gender, avatarUrl } = jwt.verify(
+      const { id, username, fullName, gender, avatarUrl, role, signedUpAt, deletedAt } = jwt.verify(
         token ?? "",
         ENV.ACCESS_TOKEN_SECRET_KEY ?? ""
       ) as UserPayload;
-      const payload: UserPayload = { id, username, fullName, gender, avatarUrl };
+      const payload: UserPayload = { id, username, fullName, gender, avatarUrl, role, signedUpAt, deletedAt };
       return payload;
     } catch {
       return false;
     }
   } else {
     try {
-      const { id, username, fullName, gender, avatarUrl } = jwt.verify(
+      const { id, username, fullName, gender, avatarUrl, role, signedUpAt, deletedAt } = jwt.verify(
         token ?? "",
         ENV.REFRESH_TOKEN_SECRET_KEY ?? ""
       ) as UserPayload;
-      const payload: UserPayload = { id, username, fullName, gender, avatarUrl };
+      const payload: UserPayload = { id, username, fullName, gender, avatarUrl, role, signedUpAt, deletedAt };
       return payload;
     } catch {
       return false;

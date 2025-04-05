@@ -1,10 +1,7 @@
 import { User } from "../types/user.type";
 import prisma from "../database";
-import { Token } from "../types/token.type";
-import { Mark } from "../types/mark.type";
-import { Activity } from "../types/activity.type";
 
-export const createUser = async (userData: User<Token, Mark, Activity>) => {
+export const createUser = async (userData: User) => {
   return await prisma.users.create({
     data: {
       fullName: userData.fullName,
@@ -60,7 +57,7 @@ export const findUserByUsername = async (username: string) => {
   });
 };
 
-export const updateUserById = async (id: string, userData: User<Token, Mark, Activity>) => {
+export const updateUserById = async (id: string, userData: User) => {
   return await prisma.users.update({
     data: {
       fullName: userData.fullName,
@@ -74,4 +71,12 @@ export const updateUserById = async (id: string, userData: User<Token, Mark, Act
     },
     where: { id }
   });
+};
+
+export const deleteUserById = async (id: string) => {
+  return await prisma.users.delete({ where: { id } });
+};
+
+export const deleteUserByUsername = async (username: string) => {
+  return await prisma.users.delete({ where: { username } });
 };

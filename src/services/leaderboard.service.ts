@@ -18,6 +18,7 @@ export const getLeaderboard = async () => {
       accumulatedMarks: user.marks.reduce((acc, mark) => acc + mark.mark, 0)
     };
   });
+
   const sortedLeaderboard = leaderboard.sort((a, b) => {
     if (a.accumulatedMarks !== b.accumulatedMarks) {
       return b.accumulatedMarks - a.accumulatedMarks;

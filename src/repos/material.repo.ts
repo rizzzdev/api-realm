@@ -14,9 +14,6 @@ export const createMaterial = async (materialData: Material<Activity, Quiz<Quest
       materialString: materialData.materialString,
       createdAt: materialData.createdAt,
       deletedAt: materialData.deletedAt,
-      activities: {
-        create: []
-      },
       quiz: {
         create: {
           createdAt: materialData.createdAt
@@ -29,8 +26,8 @@ export const createMaterial = async (materialData: Material<Activity, Quiz<Quest
 export const findMaterials = async () => {
   return await prisma.materials.findMany({
     include: {
-      activities: true,
-      quiz: true
+      quiz: true,
+      activity: true
     }
   });
 };
@@ -38,7 +35,6 @@ export const findMaterials = async () => {
 export const findMaterialById = async (id: string) => {
   return await prisma.materials.findFirst({
     include: {
-      activities: true,
       quiz: true
     },
     where: {

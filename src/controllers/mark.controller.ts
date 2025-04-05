@@ -30,9 +30,9 @@ export const getMarksController = async (request: Request, response: Response) =
   const marks =
     userId && quizId
       ? await getMarkByUserIdAndQuizId(userId, quizId)
-      : testId
+      : userId && testId
         ? await getMarkByUserIdAndTestId(userId, testId)
-        : await getMarks();
+        : await getMarks(userId);
 
   if (!marks.success) {
     logger.error(`${marks.message.toUpperCase()}: ${userPayload.username}`);

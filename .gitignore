@@ -12,3 +12,5 @@ package.lock.json
 
 # Vercel
 .vercel
+
+coverage

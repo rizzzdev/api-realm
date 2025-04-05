@@ -7,6 +7,6 @@ import { getActivitiesController, postActivityController } from "../controllers/
 const activityRouter: Router = Router();
 
 activityRouter.get("/", authMiddleware, accessMiddleware, getActivitiesController);
-activityRouter.post("/", authMiddleware, accessMiddleware, roleMiddleware, postActivityController);
+activityRouter.post("/", authMiddleware, accessMiddleware, postActivityController);
 
 export { activityRouter };

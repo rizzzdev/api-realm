@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserPayload } from "../types/user.type";
 import { verifyToken } from "../utils/jwt.util";
 import logger from "../utils/logger.util";
-import { getActivities, postActivity } from "../services/activity.service";
+import { getActivities, getActivitiesWithUserDetails, postActivity } from "../services/activity.service";
 
 export const postActivityController = async (request: Request, response: Response) => {
   const accessToken = request.headers.authorization!.split(" ")[1];
@@ -23,7 +23,13 @@ export const postActivityController = async (request: Request, response: Respons
 export const getActivitiesController = async (request: Request, response: Response) => {
   const accessToken = request.headers.authorization!.split(" ")[1];
   const userPayload = verifyToken(accessToken, "access") as UserPayload;
-  const activities = await getActivities();
+  let activities;
+  const withDetails = Boolean(request.query.withDetails);
+  if (withDetails) {
+    activities = await getActivitiesWithUserDetails();
+  } else {
+    activities = await getActivities();
+  }
 
   if (!activities.success) {
     logger.error(`${activities.message.toUpperCase()}: ${userPayload.username}`);
