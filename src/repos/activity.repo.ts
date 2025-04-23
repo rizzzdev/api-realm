@@ -16,8 +16,14 @@ export const createActivity = async (activityData: Activity) => {
 };
 
 export const findActivities = async () => {
-  return await prisma.activities.findMany();
+  return await prisma.activities.findMany({
+    orderBy: {
+      id: "asc"
+    }
+  });
 };
+
+findActivities().then(console.log);
 
 export const findActivityById = async (id: string) => {
   return await prisma.activities.findFirst({ where: { id } });
