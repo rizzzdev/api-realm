@@ -41,6 +41,7 @@ export const getActivitiesWithUserDetails = async () => {
     const activities = await findActivities();
     const users = await findUsers();
     const activitiesWithUserDetails = activities
+      .sort((a, b) => a.id.localeCompare(b.id))
       .map((activity) => {
         const user = users.find((user) => user.id === activity.userId);
         return {
