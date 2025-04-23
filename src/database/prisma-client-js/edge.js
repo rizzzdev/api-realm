@@ -229,7 +229,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "E:\\realm\\api-realm\\src\\database\\prisma-client-js",
+      "value": "/home/rizzzdev/Projects/realm/api-realm/src/database/prisma-client-js",
       "fromEnvVar": null
     },
     "config": {
@@ -238,12 +238,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "E:\\realm\\api-realm\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/rizzzdev/Projects/realm/api-realm/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

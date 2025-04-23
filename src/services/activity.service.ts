@@ -25,7 +25,7 @@ export const postActivity = async (activityData: PostActivityRequest) => {
 
 export const getActivities = async () => {
   try {
-    const activities = (await findActivities()).sort((a, b) => a.doneAt.getTime() - b.doneAt.getTime());
+    const activities = await findActivities();
     if (activities.length === 0) {
       return apiResponse(false, StatusCode.NOT_FOUND, "Activities not found!", []);
     }

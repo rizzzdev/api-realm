@@ -230,7 +230,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "E:\\realm\\api-realm\\src\\database\\prisma-client-js",
+      "value": "/home/rizzzdev/Projects/realm/api-realm/src/database/prisma-client-js",
       "fromEnvVar": null
     },
     "config": {
@@ -239,12 +239,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "E:\\realm\\api-realm\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/rizzzdev/Projects/realm/api-realm/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -305,8 +305,8 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "src/database/prisma-client-js/query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "src/database/prisma-client-js/libquery_engine-debian-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "src/database/prisma-client-js/schema.prisma")
