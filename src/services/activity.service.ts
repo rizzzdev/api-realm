@@ -41,7 +41,6 @@ export const getActivitiesWithUserDetails = async () => {
     const activities = await findActivities();
     const users = await findUsers();
     const activitiesWithUserDetails = activities
-      .sort((a, b) => a.id.localeCompare(b.id))
       .map((activity) => {
         const user = users.find((user) => user.id === activity.userId);
         return {
@@ -50,7 +49,7 @@ export const getActivitiesWithUserDetails = async () => {
           userFullname: user?.fullName
         };
       })
-      .sort((a, b) => b.doneAt.getTime() - a.doneAt.getTime());
+      .sort((a, b) => a.id.localeCompare(b.id));
     if (activities.length === 0) {
       return apiResponse(false, StatusCode.NOT_FOUND, "Activities not found!", []);
     }
