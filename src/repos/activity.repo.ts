@@ -23,8 +23,6 @@ export const findActivities = async () => {
   });
 };
 
-findActivities().then(console.log);
-
 export const findActivityById = async (id: string) => {
   return await prisma.activities.findFirst({ where: { id } });
 };

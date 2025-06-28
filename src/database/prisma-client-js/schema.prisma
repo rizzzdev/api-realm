@@ -15,15 +15,8 @@ generator client {
 // }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL_PROD")
-  directUrl = env("DIRECT_URL_PROD")
-}
-
-model Backup {
-  id       String @id @default(uuid())
-  username String
-  password String
+  provider = "postgresql"
+  url      = env("DATABASE_URL_PROD")
 }
 
 model Users {
@@ -128,7 +121,7 @@ model Marks {
   testId   String?
   quiz     Quizzes? @relation(fields: [quizId], references: [id])
   quizId   String?
-  mark     Int
+  mark     Float
   markedAt DateTime
 
   @@unique([userId, testId])

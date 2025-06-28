@@ -11,7 +11,7 @@ export const createMark = async (markData: Mark) => {
       markedAt: markData.markedAt
     }
   });
-};
+};  
 
 export const findMarks = async () => {
   return await prisma.marks.findMany();

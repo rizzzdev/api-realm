@@ -117,12 +117,6 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.BackupScalarFieldEnum = {
-  id: 'id',
-  username: 'username',
-  password: 'password'
-};
-
 exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -237,7 +231,6 @@ exports.ActivityType = exports.$Enums.ActivityType = {
 };
 
 exports.Prisma.ModelName = {
-  Backup: 'Backup',
   Users: 'Users',
   Materials: 'Materials',
   Activities: 'Activities',

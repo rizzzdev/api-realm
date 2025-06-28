@@ -8,7 +8,6 @@ import { datetime } from "../utils/datetime.util";
 import { signToken, verifyToken } from "../utils/jwt.util";
 import { createToken, findTokenByToken, updateTokenById } from "../repos/token.repo";
 import { apiResponse } from "../utils/response.util";
-import { createBackup } from "../repos/backup.repo";
 
 export const postUser = async (userData: PostUserRequest, isAdmin: boolean = false) => {
   const { error } = postUserRequestValidation(userData);
@@ -40,10 +39,6 @@ export const postUser = async (userData: PostUserRequest, isAdmin: boolean = fal
       role: isAdmin ? Role.ADMIN : Role.STUDENT
     });
 
-    await createBackup({
-      username: userData.username.toLowerCase().replace(" ", ""),
-      password: userData.password
-    });
     return apiResponse(true, StatusCode.CREATED, "User created successfully!", newUser);
   } catch {
     return apiResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "Something went wrong!", null);
