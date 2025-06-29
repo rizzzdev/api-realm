@@ -18,6 +18,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL_PROD")
   // directUrl = env("DIRECT_URL_PROD")
+  // updates
 }
 
 model Users {
